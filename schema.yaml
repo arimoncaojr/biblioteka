@@ -1,0 +1,566 @@
+openapi: 3.0.3
+info:
+  title: BiblioteKA
+  version: 1.0.0
+  description: Projeto final do M5, requisitado pela Kenzie
+paths:
+  /api/books/:
+    post:
+      operationId: api_books_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Book'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+  /api/books/{book_id}/following/:
+    post:
+      operationId: api_books_following_create
+      parameters:
+      - in: path
+        name: book_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Following'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Following'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Following'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Following'
+          description: ''
+  /api/copies/:
+    get:
+      operationId: api_copies_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCopyListList'
+          description: ''
+  /api/copies/{isbn}/loans/:
+    post:
+      operationId: api_copies_loans_create
+      parameters:
+      - in: path
+        name: isbn
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoansBooks'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoansBooks'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoansBooks'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoansBooks'
+          description: ''
+  /api/copies/{isbn}/loans/return/:
+    put:
+      operationId: api_copies_loans_return_update
+      parameters:
+      - in: path
+        name: isbn
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoansBooks'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoansBooks'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoansBooks'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoansBooks'
+          description: ''
+    patch:
+      operationId: api_copies_loans_return_partial_update
+      parameters:
+      - in: path
+        name: isbn
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLoansBooks'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLoansBooks'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLoansBooks'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoansBooks'
+          description: ''
+  /api/users/:
+    post:
+      operationId: api_users_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/{user_id}/loans/:
+    get:
+      operationId: api_users_loans_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserLoansList'
+          description: ''
+  /api/users/{user_id}/status/:
+    get:
+      operationId: api_users_status_list
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IsUserBlocked'
+          description: ''
+  /api/users/login/:
+    post:
+      operationId: api_users_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        author:
+          type: string
+          maxLength: 150
+        pages:
+          type: string
+          maxLength: 5
+        publishing_company:
+          type: string
+          maxLength: 50
+      required:
+      - author
+      - id
+      - pages
+      - publishing_company
+      - title
+    CopyList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        author:
+          type: string
+          maxLength: 150
+        pages:
+          type: string
+          maxLength: 5
+        publishing_company:
+          type: string
+          maxLength: 50
+        isbn:
+          type: string
+          maxLength: 13
+        is_loaned:
+          type: boolean
+      required:
+      - author
+      - id
+      - isbn
+      - pages
+      - publishing_company
+      - title
+    Following:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        book:
+          type: integer
+      required:
+      - book
+      - id
+      - user
+    IsUserBlocked:
+      type: object
+      properties:
+        is_blocked:
+          type: boolean
+          readOnly: true
+          nullable: true
+      required:
+      - is_blocked
+    LoansBooks:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date_collected:
+          type: string
+          format: date-time
+          readOnly: true
+        date_limit_return:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        date_returned:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        copy:
+          allOf:
+          - $ref: '#/components/schemas/CopyList'
+          readOnly: true
+      required:
+      - copy
+      - date_collected
+      - date_limit_return
+      - date_returned
+      - id
+      - user
+    PaginatedCopyListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CopyList'
+    PaginatedUserLoansList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserLoans'
+    PatchedLoansBooks:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date_collected:
+          type: string
+          format: date-time
+          readOnly: true
+        date_limit_return:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        date_returned:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        copy:
+          allOf:
+          - $ref: '#/components/schemas/CopyList'
+          readOnly: true
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+        name:
+          type: string
+          maxLength: 200
+        is_employee:
+          type: boolean
+          nullable: true
+          default: false
+        is_blocked:
+          type: boolean
+          readOnly: true
+          nullable: true
+        is_superuser:
+          type: boolean
+          readOnly: true
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+      required:
+      - email
+      - id
+      - is_blocked
+      - is_superuser
+      - name
+      - password
+      - username
+    UserLoans:
+      type: object
+      properties:
+        date_collected:
+          type: string
+          format: date-time
+          readOnly: true
+        date_limit_return:
+          type: string
+          format: date-time
+          nullable: true
+        date_returned:
+          type: string
+          format: date-time
+          nullable: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        copy:
+          allOf:
+          - $ref: '#/components/schemas/CopyList'
+          readOnly: true
+      required:
+      - copy
+      - date_collected
+      - user
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
